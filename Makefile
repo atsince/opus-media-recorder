@@ -139,7 +139,7 @@ $(LIB_OBJS):
 
 # 1.2 C++ - WebIDL - JavaScript glue code targets
 $(WEBIDL_GLUE_JS): $(addprefix $(SRC_DIR)/,$(WEBIDL)) $(LIB_BUILD_DIR)
-	python $(EMSCRIPTEN)/tools/webidl_binder.py \
+	python3 $(EMSCRIPTEN)/tools/webidl_binder.py \
 		$< \
 		$(WEBIDL_GLUE_BASE)
 
