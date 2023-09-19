@@ -55,7 +55,7 @@ $(OGG_OBJ): $(OGG_OBJ_LIB) $(LIB_BUILD_DIR)
 $(SPEEX_OBJ_LIB): $(SPEEX_DIR) $(SPEEX_DIR)/autogen.sh
 	cd $< && ./autogen.sh
 	cd $< && emconfigure ./configure \
-							--disable-examples
+							--disable-examples --disable-neon
 	emmake make -C $<
 
 $(SPEEX_OBJ): $(SPEEX_OBJ_LIB) $(LIB_BUILD_DIR)

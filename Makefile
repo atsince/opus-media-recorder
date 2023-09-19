@@ -66,7 +66,6 @@ endif
 # Emscripten compiler (emcc) options
 #export EMCC_DEBUG=1
 EMCC_OPTS = -std=c++11 \
-			-fno-exceptions \
 			-Oz \
 			--llvm-opts 3 \
 			--llvm-lto 1 \
