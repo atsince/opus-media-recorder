@@ -41,11 +41,13 @@ const macros = (function () {
 `import OpusMediaRecorder from 'opus-media-recorder';
 import EncoderWorker from 'opus-media-recorder/encoderWorker.js';
 import OggOpusWasm from 'opus-media-recorder/OggOpusEncoder.wasm';
-import WebMOpusWasm from 'opus-media-recorder/WebMOpusEncoder.wasm';`,
+import WebMOpusWasm from 'opus-media-recorder/WebMOpusEncoder.wasm';
+import OpusOpusWasm from 'opus-media-recorder/OpusOpusEncoder.wasm';`,
         WORKER_OPTIONS: `{
   encoderWorkerFactory: _ => new EncoderWorker(),
   OggOpusEncoderWasmPath: OggOpusWasm,
-  WebMOpusEncoderWasmPath: WebMOpusWasm
+  WebMOpusEncoderWasmPath: WebMOpusWasm,
+  OpusOpusEncoderWasmPath: OpusOpusWasm
 }`,
         POST_HTML: `<script type="text/javascript" src="bundle.js"></script>`
       };
@@ -55,7 +57,8 @@ import WebMOpusWasm from 'opus-media-recorder/WebMOpusEncoder.wasm';`,
         PRE_EXAMPLE: '',
         WORKER_OPTIONS: `{
   OggOpusEncoderWasmPath: '${BASE_URL}/OggOpusEncoder.wasm',
-  WebMOpusEncoderWasmPath: '${BASE_URL}/WebMOpusEncoder.wasm'
+  WebMOpusEncoderWasmPath: '${BASE_URL}/WebMOpusEncoder.wasm',
+  OpusOpusEncoderWasmPath: '${BASE_URL}/OpusOpusEncoder.wasm'
 }`,
         POST_HTML:
 `<script type="text/javascript" src="${BASE_URL}/OpusMediaRecorder.umd.js"></script>

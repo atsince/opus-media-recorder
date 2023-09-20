@@ -42,7 +42,7 @@ class OpusMediaRecorder extends EventTarget {
   constructor (stream, options = {}, workerOptions = {}) {
     const { mimeType, audioBitsPerSecond, videoBitsPerSecond, bitsPerSecond } = options; // eslint-disable-line
     // NON-STANDARD options
-    const { encoderWorkerFactory, OggOpusEncoderWasmPath, WebMOpusEncoderWasmPath } = workerOptions;
+    const { encoderWorkerFactory, OggOpusEncoderWasmPath, WebMOpusEncoderWasmPath, OpusOpusEncoderWasmPath } = workerOptions;
 
     super();
     // Attributes for the specification conformance. These have their own getters.
@@ -69,6 +69,9 @@ class OpusMediaRecorder extends EventTarget {
 
       case 'ogg':
         this._mimeType = 'audio/ogg';
+        break;
+      case 'opus':
+        this._mimeType = 'audio/opus';
         break;
 
       default:
@@ -106,6 +109,9 @@ class OpusMediaRecorder extends EventTarget {
 
       case 'audio/ogg':
         this._wasmPath = OggOpusEncoderWasmPath || '';
+        break;
+      case 'audio/opus':
+        this._wasmPath = OpusOpusEncoderWasmPath || '';
         break;
 
       default:
@@ -270,6 +276,8 @@ class OpusMediaRecorder extends EventTarget {
 
       case 'encodedData':
       case 'lastEncodedData':
+        console.log('封装后的数据');
+        console.log(buffers);
         let data = new Blob(buffers, {'type': this._mimeType});
         eventToPush = new global.Event('dataavailable');
         eventToPush.data = data;
@@ -374,7 +382,9 @@ class OpusMediaRecorder extends EventTarget {
     if (!tracks[0]) {
       throw new Error('DOMException: UnkownError, media track not found.');
     }
+    console.log('channelCount:' + tracks[0].getSettings().channelCount);
     this.channelCount = tracks[0].getSettings().channelCount || 1;
+    // this.channelCount = 2;
     this.sampleRate = this.context.sampleRate;
 
     /** @type {MediaStreamAudioSourceNode} */
@@ -486,7 +496,7 @@ class OpusMediaRecorder extends EventTarget {
     }
     if (type !== 'audio' ||
       !(subtype === 'ogg' || subtype === 'webm' ||
-        subtype === 'wave' || subtype === 'wav')) {
+        subtype === 'wave' || subtype === 'wav' || subtype === 'opus')) {
       // 3,4. If type and subtype are unsupported the return false.
       return false;
     }
@@ -499,6 +509,11 @@ class OpusMediaRecorder extends EventTarget {
         }
         break;
       case 'webm':
+        if (codec !== 'opus' && codec) {
+          return false;
+        }
+        break;
+      case 'opus':
         if (codec !== 'opus' && codec) {
           return false;
         }

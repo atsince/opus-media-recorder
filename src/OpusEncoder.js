@@ -9,7 +9,7 @@ const OPUS_APPLICATION = 2049; /** Defined in opus_defines.h
                                 *  2051: OPUS_APPLICATION_RESTRICTED_LOWDELAY = Restricted Low Delay (Lowest latency) */
 const OPUS_OUTPUT_SAMPLE_RATE = 48000; // Desired encoding sample rate. Audio will be resampled
 const OPUS_OUTPUT_MAX_LENGTH = 4000;
-const OPUS_FRAME_SIZE = 20; // Specified in ms.
+const OPUS_FRAME_SIZE = 20; // Specified in ms.一帧的平均时长。
 
 const SPEEX_RESAMPLE_QUALITY = 6; // Value between 0 and 10 inclusive. 10 being highest quality.
 
@@ -103,6 +103,8 @@ class _OpusEncoder {
         if (packetLength < 0) {
           throw new Error('Opus encoding error.');
         }
+        console.log('编码后的数据1111:');
+        console.log('packetLength:' + packetLength + ' this.mOutputBuffer.pointer: ' + this.mOutputBuffer.pointer);
         // Input packget to Ogg or WebM page generator
         this._container.writeFrame(this.mOutputBuffer.pointer,
                                    packetLength,
@@ -204,10 +206,13 @@ class _OpusEncoder {
  */
 Module.init = function (inputSampleRate, channelCount, bitsPerSecond) {
   Module.encodedBuffers = [];
+  console.log('编码器初始化 => inputSampleRate:' + inputSampleRate + ' channelCount:' + channelCount + ' bitsPerSecond:' + bitsPerSecond);
   Module.encoder = new _OpusEncoder(inputSampleRate, channelCount, bitsPerSecond);
 };
 
 Module.encode = function (buffers) {
+  console.log('编码前数据：');
+  console.log(buffers);
   Module.encoder.encode(buffers);
 };
 

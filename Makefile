@@ -32,6 +32,7 @@ DIST_DIR := .
 OUTPUT_FILES = OpusMediaRecorder.js WaveEncoder.js \
 				OggOpusEncoder.js OggOpusEncoder.wasm \
 				WebMOpusEncoder.js WebMOpusEncoder.wasm \
+				OpusOpusEncoder.js OpusOpusEncoder.wasm \
 				encoderWorker.js commonFunctions.js
 
 # Add UMD libraries
@@ -142,6 +143,9 @@ $(WEBIDL_GLUE_JS): $(addprefix $(SRC_DIR)/,$(WEBIDL)) $(LIB_BUILD_DIR)
 		$< \
 		$(WEBIDL_GLUE_BASE)
 
+# export NODE_OPTIONS=--openssl-legacy-provider
+# target:
+# 		unset NODE_OPTIONS
 # $(BUILD_DIR)/OggOpusEncoder.js
 # $(BUILD_DIR)/WebMOpusEncoder.js
 $(BUILD_DIR)/%OpusEncoder.js $(BUILD_DIR)/%OpusEncoder.wasm $(BUILD_DIR)/%OpusEncoder.wasm.map: $(SRC_DIR)/%Container.cpp $(SRC_DIR)/%Container_webidl_js_binder.cpp $(SRC_DIR)/%Container.hpp $(SRC_DIR)/OpusEncoder.js $(WEBIDL_GLUE_JS) $(SRC_DIR)/ContainerInterface.cpp $(LIB_OBJS)
@@ -167,6 +171,8 @@ ifdef PRODUCTION
 	NPM_FLAGS := $(filter-out -d,$(NPM_FLAGS))
 	NPM_FLAGS += -p
 endif
+
+#export NODE_OPTIONS=--openssl-legacy-provider
 
 # 2.1 Copy extra JS files to /build/emscripten
 $(BUILD_DIR)/%.js: $(SRC_DIR)/%.js $(BUILD_DIR)

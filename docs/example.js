@@ -2,8 +2,9 @@
 
 // Non-standard options
 const workerOptions = {
-  OggOpusEncoderWasmPath: 'https://cdn.jsdelivr.net/npm/opus-media-recorder@0.8.0/OggOpusEncoder.wasm',
-  WebMOpusEncoderWasmPath: 'https://cdn.jsdelivr.net/npm/opus-media-recorder@0.8.0/WebMOpusEncoder.wasm'
+  OggOpusEncoderWasmPath: 'https://localhost:9000/OggOpusEncoder.wasm',
+  WebMOpusEncoderWasmPath: 'https://localhost:9000/WebMOpusEncoder.wasm',
+  OpusOpusEncoderWasmPath: 'https://localhost:9000/OpusOpusEncoder.wasm'
 };
 
 // Polyfill MediaRecorder
@@ -32,7 +33,7 @@ let status = document.querySelector('#status');
 
 // This creates a MediaRecorder object
 buttonCreate.onclick = () => {
-  navigator.mediaDevices.getUserMedia({audio: true, video: false})
+  navigator.mediaDevices.getUserMedia({audio:  {channelCount: 2, sampleRate: 48000}, video: false})
     .then((stream) => {
       if (recorder && recorder.state !== 'inactive') {
         console.log('Stop the recorder first');
@@ -80,6 +81,7 @@ function createMediaRecorder (stream) {
     let extension = recorder.mimeType.match(/ogg/) ? '.ogg'
                   : recorder.mimeType.match(/webm/) ? '.webm'
                   : recorder.mimeType.match(/wav/) ? '.wav'
+                  : recorder.mimeType.match(/opus/) ? '.opus'
                   : '';
     link.download = 'recording' + extension;
 

@@ -2,6 +2,7 @@ function initWorker (workerGlobalScope) {
   const WaveEncoder = require('./WaveEncoder.js');
   const WebMOpusEncoder = require('./WebMOpusEncoder.js');
   const OggOpusEncoder = require('./OggOpusEncoder.js');
+  const OpusOpusEncoder = require('./OpusOpusEncoder.js');
 
   let encoder;
 
@@ -24,6 +25,9 @@ function initWorker (workerGlobalScope) {
 
           case 'audio/ogg':
             encoderModule = OggOpusEncoder;
+            break;
+          case 'audio/opus':
+            encoderModule = OpusOpusEncoder;
             break;
         }
         // Override Emscripten configuration
@@ -67,6 +71,7 @@ function initWorker (workerGlobalScope) {
         }
 
         const buffers = encoder.flush();
+
         self.postMessage({
           command: command === 'done' ? 'lastEncodedData' : 'encodedData',
           buffers
