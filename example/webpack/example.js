@@ -23,6 +23,8 @@ let buttonStart = document.querySelector('#buttonStart');
 let buttonPause = document.querySelector('#buttonPause');
 let buttonResume = document.querySelector('#buttonResume');
 let buttonStop = document.querySelector('#buttonStop');
+let buttonDestory = document.querySelector('#buttonDestory');
+
 let buttonStopTracks = document.querySelector('#buttonStopTracks'); // For debugging purpose
 // User-selectable option
 let mimeSelect = document.querySelector('#mimeSelect');
@@ -58,7 +60,7 @@ buttonCreate.onclick = () => {
 };
 
 function createMediaRecorder (stream) {
-  // Create recorder object
+  // Create recorder object //option,可设置码率，
   let options = { mimeType: mimeSelectValue };
   recorder = new MediaRecorder(stream, options, workerOptions);
 
@@ -72,7 +74,6 @@ function createMediaRecorder (stream) {
   };
   recorder.ondataavailable = (e) => {
     dataChunks.push(e.data);
-
     console.log('Recorder data available');
     updateButtonState();
   };
@@ -105,6 +106,11 @@ function initButtons () {
   buttonPause.onclick = _ => recorder.pause();
   buttonResume.onclick = _ => recorder.resume();
   buttonStop.onclick = _ => recorder.stop();
+  buttonDestory.onclick = ()=>{
+    recorder.destroy();
+    recorder = undefined;
+
+  }
   buttonStopTracks.onclick = _ => {
     // stop all tracks (this will delete a mic icon from a browser tab
     recorder.stream.getTracks().forEach(i => i.stop());
@@ -162,6 +168,7 @@ function updateButtonState () {
     case 'inactive':
       buttonCreate.disabled = false;
       buttonStart.disabled = false;
+      buttonDestory.disabled = false;
       buttonPause.disabled = true;
       buttonResume.disabled = true;
       buttonStop.disabled = true;
@@ -176,12 +183,14 @@ function updateButtonState () {
       buttonPause.disabled = false;
       buttonResume.disabled = false;
       buttonStop.disabled = false;
+      buttonDestory.disabled = true;
       buttonStopTracks.disabled = false; // For debugging purpose
       status.innerHTML = 'Recording. Click "stop" button to play recording.';
       break;
     case 'paused':
       buttonCreate.disabled = true;
       buttonStart.disabled = true;
+      buttonDestory.disabled = true;
       buttonPause.disabled = true;
       buttonResume.disabled = false;
       buttonStop.disabled = false;

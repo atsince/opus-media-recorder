@@ -276,11 +276,15 @@ class OpusMediaRecorder extends EventTarget {
 
       case 'encodedData':
       case 'lastEncodedData':
-        console.log('封装后的数据');
-        console.log(buffers);
-        let data = new Blob(buffers, {'type': this._mimeType});
+
         eventToPush = new global.Event('dataavailable');
-        eventToPush.data = data;
+        if (this.mimeType === 'audio/opus') {
+          eventToPush.data = buffers;
+        } else {
+          let data = new Blob(buffers, {'type': this._mimeType});
+          eventToPush.data = data;
+        }
+
         this.dispatchEvent(eventToPush);
 
         // Detect of stop() called before
@@ -406,6 +410,11 @@ class OpusMediaRecorder extends EventTarget {
     }
   }
 
+  destroy () {
+    this.stream.getAudioTracks()[0].stop();
+    this.worker.terminate();
+    this.workerState = 'closed';
+  }
   /**
    * Stops recording, at which point a dataavailable event containing
    * the final Blob of saved data is fired. No more recording occurs.
